@@ -263,12 +263,11 @@ function require(_exports) {
 
     on(name, cb) {
       if (name === "mouseenter" || name === "mouseleave") {
-        global.interactiveObjs.push(this);
-        global.interactiveObjsSp.push(this);
+        if(!global.interactiveObjsSp.includes(this)) global.interactiveObjsSp.push(this);
       } else {
         if (!this[name]) throw `[moa-interact] Can't resolve event named ${name}`;
-        global.interactiveObjs.push(this);
       }
+      if(!global.interactiveObjs.includes(this)) global.interactiveObjs.push(this);
       this[name].push(cb.bind(this));
     }
 
