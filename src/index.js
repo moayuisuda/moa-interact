@@ -1,6 +1,5 @@
 function require(_exports) {
   const global = {
-    zIndex: 0,
     events: ["click", "mousemove", "mouseup", "mousedown", "mouseover"],
     spEvents: ["mouseenter", "mouseleave"],
     ctxFuncs: ["rect", "fillRect", "strokeRect", "clearRect", "moveTo", "lineTo", "arc", "isPointInPath"], // Which the params x,y are in the starting position
@@ -120,14 +119,14 @@ function require(_exports) {
       if (!zIndex) global.objs.push(obj);
       if (zIndex > 0) {
         for (let i of global.advancedObjs) {
-          if (i.zIndex === zIndex) throw `[moa-interact] The index '${zIndex}' has already benn used.`;
+          if (i.zIndex === zIndex) throw `[moa-interact] The index '${zIndex}' has already been used.`;
         }
         global.lowObjs.push(obj);
         caculateZIndex("lowObjs");
       }
       if (zIndex < 0) {
         for (let i of global.lowObjs) {
-          if (i.zIndex === zIndex) throw `[moa-interact] The index '${zIndex}' has already benn used.`;
+          if (i.zIndex === zIndex) throw `[moa-interact] The index '${zIndex}' has already been used.`;
         }
         global.advancedObjs.push(obj);
         caculateZIndex("advancedObjs");
