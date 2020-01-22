@@ -1,5 +1,5 @@
 ## :star2:只用书写canvas原生api的canvas互动库
-### 不用再去学习canvas互动库的黑盒语法，只需要原生api的语法，通过变异的上下文，就可以轻而易举的实现canvas的互动。 
+### 不用再去学习canvas互动库的黑盒语法，只需要原生api的语法，通过变异的上下文，可以轻而易举的实现canvas的互动。 
 ```js
 let app = new Moa.App(document.querySelector(".stage"));
 
