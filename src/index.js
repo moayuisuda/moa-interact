@@ -1,4 +1,8 @@
-function require(_exports) {
+(function require_Moa(_this) {
+  if (!exports) {
+    var exports = {};
+    _this.Moa = exports;
+  }
   const global = {
     events: ["click", "mousemove", "mouseup", "mousedown", "mouseover"],
     spEvents: ["mouseenter", "mouseleave"],
@@ -45,7 +49,7 @@ function require(_exports) {
       for (let name of global.events) {
         global.canvas.addEventListener(name, e => {
           if (global.top) {
-            this.emit(name, {
+            this.emit(global.top, name, {
               x: e.offsetX || e.clientX - global.canvas.getBoundingClientRect().left,
               y: e.offsetY || e.clientY - global.canvas.getBoundingClientRect().top,
               e
@@ -70,31 +74,40 @@ function require(_exports) {
       requestAnimationFrame(this.run.bind(this));
     }
 
-    emit(name, e) {
+    emit(obj, name, e) {
       console.log(global.top.draw);
-      for (let cb of global.top[name]) {
+      for (let cb of obj[name]) {
         cb(e);
       }
     }
 
     // Preselect the top obj
     preselect(e) {
+      console.log(global.top);
       let top;
       const low = [];
       const advanced = [];
       const normal = [];
 
       for (let i of global.interactiveObjs) {
-        let b = i.getBounding();
-        if (b.top <= e.y && b.bottom >= e.y && b.left <= e.x && b.right >= e.x) {
-          if (i.zIndex < 0) low.push(i);
-          if (!i.zIndex) normal.push(i);
-          if (i.zIndex > 0) advanced.push(i);
+        if (utils.ifDef(i.r)) {
+          if (Math.sqrt(Math.pow(e.x - i.x, 2) + Math.pow(e.y - i.y, 2)) <= i.r) {
+            if (i.zIndex < 0) low.push(i);
+            if (!i.zIndex) normal.push(i);
+            if (i.zIndex > 0) advanced.push(i);
+          }
+        } else {
+          let b = i.getBounding();
+          if (b.top <= e.y && b.bottom >= e.y && b.left <= e.x && b.right >= e.x) {
+            if (i.zIndex < 0) low.push(i);
+            if (!i.zIndex) normal.push(i);
+            if (i.zIndex > 0) advanced.push(i);
+          }
         }
       }
 
+      global.top = top = utils.caculateTop(low, normal, advanced);
       if (low.length + advanced.length + normal.length != 0) {
-        global.top = top = utils.caculateTop(low, normal, advanced);
         if (top && top.mouseIn === false) {
           top.mouseIn = true;
           for (let cb of top.mouseenter) {
@@ -113,9 +126,10 @@ function require(_exports) {
       }
     }
 
-    Obj(x, y, w, h, draw, zIndex) {
+    Obj({ x, y, w, h, r, draw, zIndex }) {
+      if((utils.ifDef(w) || utils.ifDef(h)) && utils.ifDef(r)) throw `[moa-interact] The 'r' and 'w、h' is mutally exclusive `;
       if (zIndex === 0) throw "[moa-interact] The zIndex can't be 0";
-      let obj = new Obj(x, y, w, h, draw);
+      let obj = new Obj({ x, y, w, h, r, draw, zIndex });
       if (!zIndex) global.objs.push(obj);
       if (zIndex > 0) {
         for (let i of global.advancedObjs) {
@@ -142,7 +156,7 @@ function require(_exports) {
   }
 
   class Obj {
-    constructor(x, y, w, h, draw, zIndex) {
+    constructor({ x, y, w, h, r, draw, zIndex }) {
       this.mouseIn = false;
       this._zIndex = zIndex;
       this.draw = draw;
@@ -150,6 +164,7 @@ function require(_exports) {
       this.y = y;
       this.w = w;
       this.h = h;
+      this.r = r;
       this.ctx;
       this.init();
     }
@@ -262,11 +277,11 @@ function require(_exports) {
 
     on(name, cb) {
       if (name === "mouseenter" || name === "mouseleave") {
-        if(!global.interactiveObjsSp.includes(this)) global.interactiveObjsSp.push(this);
+        if (!global.interactiveObjsSp.includes(this)) global.interactiveObjsSp.push(this);
       } else {
         if (!this[name]) throw `[moa-interact] Can't resolve event named ${name}`;
       }
-      if(!global.interactiveObjs.includes(this)) global.interactiveObjs.push(this);
+      if (!global.interactiveObjs.includes(this)) global.interactiveObjs.push(this);
       this[name].push(cb.bind(this));
     }
 
@@ -307,12 +322,6 @@ function require(_exports) {
     }
   };
 
-  _exports.App = App;
-  _exports.global = global;
-}
-
-(function() {
-  let _exports = {};
-  require(_exports);
-  window.Moa = _exports;
-})();
+  exports.App = App;
+  exports.global = global;
+})(window);

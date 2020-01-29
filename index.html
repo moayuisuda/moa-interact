@@ -11,8 +11,8 @@
       }
       .stage {
         margin: 10vw;
-        width: 50vw;
-        height: 50vh;
+        width: 500px;
+        height: 500px;
       }
     </style>
   </head>
@@ -22,9 +22,15 @@
   <script src="./src/index.js"></script>
   <script>
     let app = new Moa.App(document.querySelector(".stage"));
-    let rect = app.Obj(100, 100, 100, 100, ctx => {
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, 100, 100);
+    let rect = app.Obj({
+      x: 100,
+      y: 100,
+      w: 100,
+      h: 100,
+      draw: ctx => {
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, 100, 100);
+      }
     });
 
     let ifDrag = false;
@@ -54,7 +60,7 @@
         gradient.addColorStop("0", "magenta");
         gradient.addColorStop("0.5", "blue");
         gradient.addColorStop("1.0", "red");
- 
+
         ctx.fillStyle = gradient;
         ctx.fillText("moa-interact", 10, 90);
       };
@@ -85,10 +91,15 @@
       ifDrag = false;
     });
 
-    let rect1 = app.Obj(200, 200, 100, 100, ctx => {
-      ctx.fillStyle = "#000000";
-      ctx.strokeStyle = "#000000";
-      ctx.fillRect(0, 0, 100, 100);
+    let rect1 = app.Obj({
+      x: 300,
+      y: 300,
+      r: 100,
+      draw: function(ctx) {
+        ctx.fillStyle = "#000000";
+        ctx.arc(0, 0, this.r, 0, 2 * Math.PI);
+        ctx.fill();
+      }
     });
 
     let ifDrag1 = false;
@@ -108,9 +119,26 @@
     });
 
     rect1.on("mousedown", function(e) {
+      console.log("rect1");
       ifDrag1 = true;
       p1.x = e.x;
       p1.y = e.y;
+    });
+
+    rect1.on("mouseenter", function(e) {
+      this.draw = function(ctx) {
+        ctx.fillStyle = "#c0ebff";
+        ctx.arc(0, 0, this.r, 0, 2 * Math.PI);
+        ctx.fill();
+      };
+    });
+
+    rect1.on("mouseleave", function(e) {
+      this.draw = function(ctx) {
+        ctx.fillStyle = "#000000";
+        ctx.arc(0, 0, this.r, 0, 2 * Math.PI);
+        ctx.fill();
+      };
     });
 
     rect1.on("mouseup", function(e) {
