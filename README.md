@@ -86,7 +86,7 @@ texture.onload = function() {
 
 ```
 
-![](https://user-gold-cdn.xitu.io/2020/1/30/16ff63d1d94d1b1b?w=441&h=451&f=gif&s=296368)
+![](https://user-gold-cdn.xitu.io/2020/1/30/16ff717a94c92211?w=401&h=336&f=gif&s=95120)
 
 <font color=red>请注意如果你是采用的默认绘图对象，请保证你的`draw`函数中没有出现`ctx.beginPath()`(每一个对象绘图前已经默认调用了)，它会影响碰撞判断。</font>
 # 上下文变异
