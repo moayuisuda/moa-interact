@@ -75,7 +75,6 @@
     }
 
     emit(obj, name, e) {
-      console.log(global.top.draw);
       for (let cb of obj[name]) {
         cb(e);
       }
@@ -83,7 +82,6 @@
 
     // Preselect the top obj
     preselect(e) {
-      console.log(global.top);
       let top;
       const low = [];
       const advanced = [];
@@ -96,12 +94,21 @@
             if (!i.zIndex) normal.push(i);
             if (i.zIndex > 0) advanced.push(i);
           }
-        } else {
+        } else if(utils.ifDef(i.w) || utils.ifDef(i.h)) {
           let b = i.getBounding();
           if (b.top <= e.y && b.bottom >= e.y && b.left <= e.x && b.right >= e.x) {
             if (i.zIndex < 0) low.push(i);
             if (!i.zIndex) normal.push(i);
             if (i.zIndex > 0) advanced.push(i);
+          }
+        } else {
+          i.drawFn(i.ctx);
+          console.log('draw');
+          if(utils.ifHit(e.x, e.y)) {
+            console.log('hit')
+            if (i.zIndex < 0) low.push(i);
+            if (!i.zIndex) normal.push(i);
+            if (i.zIndex > 0) advanced.push(i);            
           }
         }
       }
@@ -301,6 +308,9 @@
   }
 
   const utils = {
+    ifHit(x, y) {
+      return global.co.isPointInPath(x, y);
+    },
     ifDef(e) {
       return !(Object.prototype.toString.call(e) === "[object Undefined]");
     },

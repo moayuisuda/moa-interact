@@ -91,22 +91,21 @@
       ifDrag = false;
     });
 
-    let rect1 = app.Obj({
-      x: 300,
-      y: 300,
-      r: 100,
-      draw: function(ctx) {
-        ctx.fillStyle = "#000000";
-        ctx.arc(0, 0, this.r, 0, 2 * Math.PI);
-        ctx.fill();
-      }
-    });
-
     let ifDrag1 = false;
     let p1 = {
       x: undefined,
       y: undefined
     };
+
+    let rect1 = app.Obj({
+      x: 300,
+      y: 300,
+      draw: function(ctx) {
+        ctx.fillStyle = "#000000";
+        ctx.arc(0, 0, 50, 0, 1 * Math.PI);
+        ctx.fill();
+      }
+    });
 
     rect1.on("mousemove", function(e) {
       if (ifDrag1) {
@@ -128,7 +127,7 @@
     rect1.on("mouseenter", function(e) {
       this.draw = function(ctx) {
         ctx.fillStyle = "#c0ebff";
-        ctx.arc(0, 0, this.r, 0, 2 * Math.PI);
+        ctx.arc(0, 0, 50, 0, 1 * Math.PI);
         ctx.fill();
       };
     });
@@ -136,7 +135,7 @@
     rect1.on("mouseleave", function(e) {
       this.draw = function(ctx) {
         ctx.fillStyle = "#000000";
-        ctx.arc(0, 0, this.r, 0, 2 * Math.PI);
+        ctx.arc(0, 0, 50, 0, 1 * Math.PI);
         ctx.fill();
       };
     });
