@@ -16,7 +16,7 @@
 ```js
 let app = new Moa.App(document.querySelector(".stage"));
 
-let rect = app.Obj({
+let rect = app.obj({
   x: 100,
   y: 100,
   draw: ctx => {
