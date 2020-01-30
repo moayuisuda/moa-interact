@@ -1,7 +1,5 @@
-## 一个轻量的canvas交互引擎🌟
-#### 不用再去学习canvas库的黑盒语法，只需原生api的语法，通过变异的上下文，就可以轻而易举的实现canvas的交互。  
 # 起因
-<b>作为一个pixi.js，p5.js等图形库的使用者，我觉得他们的上手成本体现在：</b>
+<b>作为一个pixi.js，p5.js等图形库的使用者，个人觉得他们的上手成本体现在：</b>
 
 1. 你得先去学习它们库的语法与层级/事件概念。
 2. 在没读源码前它们就是一个黑盒，但是阅读图形库的源码一般难度都不小。出了奇怪的bug难以去定位，网上的中文经验也很少，要想把它们使用好需要很多时间去积累经验。
@@ -49,19 +47,19 @@ app.run()
 接着你可以指定此对象的层级`zIndex`</b>
 ```js
 // 创建一个绘图对象
-let rect2 = app.Obj({
-  x: 300,
-  y: 300,
+let circle = app.obj({
+  x: 250,
+  y: 250,
   draw: function(ctx) {
     ctx.fillStyle = "#000000";
-    ctx.arc(0, 0, this.r, 0, 1 * Math.PI);
+    ctx.arc(0, 0, 50, 0, 1 * Math.PI);
     ctx.fill();
   }
 });
 
 
-// 创造一个矩形碰撞区域的对象
-let rect = app.Obj({
+// 创造一个自定义矩形碰撞区域的对象
+let rect = app.obj({
   x: 100,
   y: 100,
   w: 100,
@@ -72,20 +70,23 @@ let rect = app.Obj({
   }
 });
 
-// 创建一个圆形碰撞区域的对象
-let rect1 = app.Obj({
-  x: 300,
-  y: 300,
-  r: 100,
-  draw: function(ctx) {
-    ctx.fillStyle = "#000000";
-    ctx.arc(0, 0, this.r, 0, 2 * Math.PI);
-    ctx.fill();
-  }
-});
+// 创建一个自定义圆形碰撞区域的对象，通常用来处理圆形的贴图
+let texture = document.createElement("img");
+texture.src = "./static/img.png";
+texture.onload = function() {
+  let img = app.obj({
+    x: 400,
+    y: 400,
+    r: 100,
+    draw: function(ctx) {
+      ctx.drawImage(texture, -100, -100, 200, 200);
+    }
+  });
+}
+
 ```
 
-![](https://user-gold-cdn.xitu.io/2020/1/29/16ff00df6fc7fd6a?w=559&h=504&f=gif&s=18628)
+![](https://user-gold-cdn.xitu.io/2020/1/30/16ff63d1d94d1b1b?w=441&h=451&f=gif&s=296368)
 
 <font color=red>请注意如果你是采用的默认绘图对象，请保证你的`draw`函数中没有出现`ctx.beginPath()`(每一个对象绘图前已经默认调用了)，它会影响碰撞判断。</font>
 # 上下文变异
@@ -100,31 +101,60 @@ ctx => {
 
 下面展示了一段将这个对象变为可拖拽对象的代码
 ```js
-let ifDrag = false;
-const p = {
+let circle = app.obj({
+  x: 250,
+  y: 250,
+  draw: function(ctx) {
+    ctx.fillStyle = "#000000";
+    ctx.arc(0, 0, 50, 0, 1 * Math.PI);
+    ctx.fill();
+  }
+});
+
+let ifDrag_c = false;
+const p_c = {
   x: undefined,
   y: undefined
 };
 
-rect.on("mousedown", function(e) {
-  ifDrag = true;
-  p.x = e.x;
-  p.y = e.y;
-});
-rect.on("mouseup", function(e) {
-  ifDrag = false;
-});    
-rect.on("mousemove", function(e) {
-  if (ifDrag) {
-    this.x += e.x - p.x;
-    this.y += e.y - p.y;
-    p.x = e.x;
-    p.y = e.y;
+circle.on("mousemove", function(e) {
+  if (ifDrag_c) {
+    this.x += e.x - p_c.x;
+    this.y += e.y - p_c.y;
+    p_c.x = e.x;
+    p_c.y = e.y;
   }
+});
+
+circle.on("mousedown", function(e) {
+  ifDrag_c = true;
+  p_c.x = e.x;
+  p_c.y = e.y;
+});
+
+circle.on("mouseenter", function(e) {
+  this.draw = function(ctx) {
+    ctx.fillStyle = "#c0ebff";
+    ctx.arc(0, 0, 50, 0, 1 * Math.PI);
+    ctx.fill();
+  };
+});
+
+circle.on("mouseleave", function(e) {
+  this.draw = function(ctx) {
+    ctx.fillStyle = "#000000";
+    ctx.arc(0, 0, 50, 0, 1 * Math.PI);
+    ctx.fill();
+  };
+});
+
+circle.on("mouseup", function(e) {
+  ifDrag_c = false;
 });
 ```
 
-![](https://user-gold-cdn.xitu.io/2020/1/29/16ff00f373fd4c07?w=458&h=360&f=gif&s=78978)
+
+![](https://user-gold-cdn.xitu.io/2020/1/30/16ff641e8c200010?w=278&h=235&f=gif&s=26848)
 # 事件
 支持`["click", "mousemove", "mouseup", "mousedown", "mouseover", "mouseenter", "mouseleave"]`
 注意这里只有调用了`Obj.on("eventname", cb)`的`Obj`才会被加入下面的<b>层级比较</b>中，如果从来没有调用过`on`方法，那么这个Obj在层级中是一个可穿透的对象。

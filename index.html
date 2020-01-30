@@ -11,8 +11,8 @@
       }
       .stage {
         margin: 10vw;
-        width: 500px;
-        height: 500px;
+        width: 600px;
+        height: 600px;
       }
     </style>
   </head>
@@ -22,7 +22,9 @@
   <script src="./src/index.js"></script>
   <script>
     let app = new Moa.App(document.querySelector(".stage"));
-    let rect = app.Obj({
+
+    // rect
+    let rect = app.obj({
       x: 100,
       y: 100,
       w: 100,
@@ -91,15 +93,10 @@
       ifDrag = false;
     });
 
-    let ifDrag1 = false;
-    let p1 = {
-      x: undefined,
-      y: undefined
-    };
-
-    let rect1 = app.Obj({
-      x: 300,
-      y: 300,
+    // circle
+    let circle = app.obj({
+      x: 250,
+      y: 250,
       draw: function(ctx) {
         ctx.fillStyle = "#000000";
         ctx.arc(0, 0, 50, 0, 1 * Math.PI);
@@ -107,24 +104,28 @@
       }
     });
 
-    rect1.on("mousemove", function(e) {
-      if (ifDrag1) {
-        this.x += e.x - p1.x;
-        this.y += e.y - p1.y;
+    let ifDrag_c = false;
+    const p_c = {
+      x: undefined,
+      y: undefined
+    };
 
-        p1.x = e.x;
-        p1.y = e.y;
+    circle.on("mousemove", function(e) {
+      if (ifDrag_c) {
+        this.x += e.x - p_c.x;
+        this.y += e.y - p_c.y;
+        p_c.x = e.x;
+        p_c.y = e.y;
       }
     });
 
-    rect1.on("mousedown", function(e) {
-      console.log("rect1");
-      ifDrag1 = true;
-      p1.x = e.x;
-      p1.y = e.y;
+    circle.on("mousedown", function(e) {
+      ifDrag_c = true;
+      p_c.x = e.x;
+      p_c.y = e.y;
     });
 
-    rect1.on("mouseenter", function(e) {
+    circle.on("mouseenter", function(e) {
       this.draw = function(ctx) {
         ctx.fillStyle = "#c0ebff";
         ctx.arc(0, 0, 50, 0, 1 * Math.PI);
@@ -132,7 +133,7 @@
       };
     });
 
-    rect1.on("mouseleave", function(e) {
+    circle.on("mouseleave", function(e) {
       this.draw = function(ctx) {
         ctx.fillStyle = "#000000";
         ctx.arc(0, 0, 50, 0, 1 * Math.PI);
@@ -140,9 +141,49 @@
       };
     });
 
-    rect1.on("mouseup", function(e) {
-      ifDrag1 = false;
+    circle.on("mouseup", function(e) {
+      ifDrag_c = false;
     });
+
+    // img
+    let texture = document.createElement("img");
+    texture.src = "./static/img.png";
+    texture.onload = function() {
+      let img = app.obj({
+        x: 400,
+        y: 400,
+        r: 100,
+        draw: function(ctx) {
+          ctx.drawImage(texture, -100, -100, 200, 200);
+        }
+      });
+
+      let ifDrag = false;
+      const p = {
+        x: undefined,
+        y: undefined
+      };
+
+      img.on("mousemove", function(e) {
+        if (ifDrag) {
+          this.x += e.x - p.x;
+          this.y += e.y - p.y;
+
+          p.x = e.x;
+          p.y = e.y;
+        }
+      });
+
+      img.on("mousedown", function(e) {
+        ifDrag = true;
+        p.x = e.x;
+        p.y = e.y;
+      });
+
+      img.on("mouseup", function(e) {
+        ifDrag = false;
+      });
+    };
 
     app.run();
   </script>

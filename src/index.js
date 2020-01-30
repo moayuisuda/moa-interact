@@ -133,7 +133,7 @@
       }
     }
 
-    Obj({ x, y, w, h, r, draw, zIndex }) {
+    obj({ x, y, w, h, r, draw, zIndex }) {
       if((utils.ifDef(w) || utils.ifDef(h)) && utils.ifDef(r)) throw `[moa-interact] The 'r' and 'w、h' is mutally exclusive `;
       if (zIndex === 0) throw "[moa-interact] The zIndex can't be 0";
       let obj = new Obj({ x, y, w, h, r, draw, zIndex });
@@ -272,7 +272,9 @@
         return global.co.arcTo(x1 + this.x, y1 + this.y, x2 + this.x, y2 + this.y, r);
       }.bind(this);
       this.ctx.drawImage = function(img, sx, sy, sw, sh, x, y, w, h) {
-        return global.co.drawImage(img, sx, sy, sw, sh, ifDef(x) && x + this.x, ifDef(y) && y + this.y, w, h);
+        if(arguments.length === 3) return global.co.drawImage(img, arguments[1] + this.x, arguments[2] + this.y);
+        else if(arguments.length === 5) return global.co.drawImage(img, arguments[1] + this.x, arguments[2] + this.y, ...[...arguments].slice(3));
+        else return global.co.drawImage(img, sx, sy, sw, sh, x + this.x, y + this.y, w, h);
       }.bind(this);
       this.ctx.putImageData = function(imgData, x, y, dirtyX, dirtyY, dirtyWidth, dirtyHeight) {
         return global.co.putImageData(imgData, x, y, ifDef(dirtyX) && this.x + dirtyX, ifDef(dirtyY) && this.y + dirtyY, dirtyWidth, dirtyHeight);
