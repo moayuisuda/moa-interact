@@ -61,13 +61,7 @@
 
     run() {
       global.co.clearRect(0, 0, global.canvas.width, global.canvas.height);
-      for (let i of global.lowObjs) {
-        i.drawFn();
-      }
-      for (let i of global.objs) {
-        i.drawFn();
-      }
-      for (let i of global.advancedObjs) {
+      for (let i of global.lowObjs.concat(global.objs, global.advancedObjs)) {
         i.drawFn();
       }
 
@@ -86,30 +80,22 @@
       const low = [];
       const advanced = [];
       const normal = [];
+      function defLevel(i) {
+        if (i.zIndex < 0) low.push(i);
+        if (!i.zIndex) normal.push(i);
+        if (i.zIndex > 0) advanced.push(i);
+      }
 
       for (let i of global.interactiveObjs) {
         if (utils.ifDef(i.r)) {
-          if (Math.sqrt(Math.pow(e.x - i.x, 2) + Math.pow(e.y - i.y, 2)) <= i.r) {
-            if (i.zIndex < 0) low.push(i);
-            if (!i.zIndex) normal.push(i);
-            if (i.zIndex > 0) advanced.push(i);
-          }
+          if (Math.sqrt(Math.pow(e.x - i.x, 2) + Math.pow(e.y - i.y, 2)) <= i.r) defLevel(i);
         } else if(utils.ifDef(i.w) || utils.ifDef(i.h)) {
           let b = i.getBounding();
-          if (b.top <= e.y && b.bottom >= e.y && b.left <= e.x && b.right >= e.x) {
-            if (i.zIndex < 0) low.push(i);
-            if (!i.zIndex) normal.push(i);
-            if (i.zIndex > 0) advanced.push(i);
-          }
+          if (b.top <= e.y && b.bottom >= e.y && b.left <= e.x && b.right >= e.x) defLevel(i);
         } else {
           i.drawFn(i.ctx);
           console.log('draw');
-          if(utils.ifHit(e.x, e.y)) {
-            console.log('hit')
-            if (i.zIndex < 0) low.push(i);
-            if (!i.zIndex) normal.push(i);
-            if (i.zIndex > 0) advanced.push(i);            
-          }
+          if(utils.ifHit(e.x, e.y)) defLevel(i);
         }
       }
 
@@ -183,10 +169,7 @@
     }
 
     initEvents() {
-      for (let i of global.events) {
-        this[i] = [];
-      }
-      for (let i of global.spEvents) {
+      for (let i of global.events.concat(global.spEvents)) {
         this[i] = [];
       }
     }
