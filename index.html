@@ -17,6 +17,10 @@
     </style>
   </head>
   <body>
+    <select>
+      <option value="1">1</option>
+      <option value="2">2</option>
+    </select>
     <div class="stage"></div>
   </body>
   <script src="./src/index.js"></script>
@@ -51,22 +55,22 @@
       }
     });
 
-    rect.on("click", function(e) {
-      this.draw = ctx => {
-        ctx.font = "20px Georgia";
-        ctx.fillText("Hello World!", 10, 50);
+    // rect.on("click", function(e) {
+    //   this.draw = ctx => {
+    //     ctx.font = "20px Georgia";
+    //     ctx.fillText("Hello World!", 10, 50);
 
-        ctx.font = "30px Verdana";
+    //     ctx.font = "30px Verdana";
 
-        var gradient = ctx.createLinearGradient(0, 0, 100, 0);
-        gradient.addColorStop("0", "magenta");
-        gradient.addColorStop("0.5", "blue");
-        gradient.addColorStop("1.0", "red");
+    //     var gradient = ctx.createLinearGradient(0, 0, 100, 0);
+    //     gradient.addColorStop("0", "magenta");
+    //     gradient.addColorStop("0.5", "blue");
+    //     gradient.addColorStop("1.0", "red");
 
-        ctx.fillStyle = gradient;
-        ctx.fillText("moa-interact", 10, 90);
-      };
-    });
+    //     ctx.fillStyle = gradient;
+    //     ctx.fillText("moa-interact", 10, 90);
+    //   };
+    // });
 
     rect.on("mouseenter", function(e) {
       this.draw = ctx => {
