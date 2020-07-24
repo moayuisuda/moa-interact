@@ -36,6 +36,10 @@
       worker.onmessage = (msg) => {
         const msg = msg.data
         const data = msg.data
+
+        switch(data.mark) {
+          case 'obj':
+        }
       }
     }
 
