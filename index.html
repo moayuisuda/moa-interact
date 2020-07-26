@@ -13,6 +13,7 @@
         margin: 10vw;
         width: 600px;
         height: 600px;
+        background-color: pink;
       }
     </style>
   </head>
@@ -39,21 +40,21 @@
       }
     });
 
-    let ifDrag = false;
-    const p = {
-      x: undefined,
-      y: undefined
-    };
+    // let ifDrag = false;
+    // const p = {
+    //   x: undefined,
+    //   y: undefined
+    // };
 
-    rect.on("mousemove", function(e) {
-      if (ifDrag) {
-        this.x += e.x - p.x;
-        this.y += e.y - p.y;
+    // rect.on("mousemove", function(e) {
+    //   if (ifDrag) {
+    //     this.x += e.x - p.x;
+    //     this.y += e.y - p.y;
 
-        p.x = e.x;
-        p.y = e.y;
-      }
-    });
+    //     p.x = e.x;
+    //     p.y = e.y;
+    //   }
+    // });
 
     // rect.on("click", function(e) {
     //   this.draw = ctx => {
@@ -87,15 +88,15 @@
       };
     });
 
-    rect.on("mousedown", function(e) {
-      ifDrag = true;
-      p.x = e.x;
-      p.y = e.y;
-    });
+    // rect.on("mousedown", function(e) {
+    //   ifDrag = true;
+    //   p.x = e.x;
+    //   p.y = e.y;
+    // });
 
-    rect.on("mouseup", function(e) {
-      ifDrag = false;
-    });
+    // rect.on("mouseup", function(e) {
+    //   ifDrag = false;
+    // });
 
     // circle
     let circle = app.obj({
@@ -108,26 +109,26 @@
       }
     });
 
-    let ifDrag_c = false;
-    const p_c = {
-      x: undefined,
-      y: undefined
-    };
+    // let ifDrag_c = false;
+    // const p_c = {
+    //   x: undefined,
+    //   y: undefined
+    // };
 
-    circle.on("mousemove", function(e) {
-      if (ifDrag_c) {
-        this.x += e.x - p_c.x;
-        this.y += e.y - p_c.y;
-        p_c.x = e.x;
-        p_c.y = e.y;
-      }
-    });
+    // circle.on("mousemove", function(e) {
+    //   if (ifDrag_c) {
+    //     this.x += e.x - p_c.x;
+    //     this.y += e.y - p_c.y;
+    //     p_c.x = e.x;
+    //     p_c.y = e.y;
+    //   }
+    // });
 
-    circle.on("mousedown", function(e) {
-      ifDrag_c = true;
-      p_c.x = e.x;
-      p_c.y = e.y;
-    });
+    // circle.on("mousedown", function(e) {
+    //   ifDrag_c = true;
+    //   p_c.x = e.x;
+    //   p_c.y = e.y;
+    // });
 
     circle.on("mouseenter", function(e) {
       this.draw = function(ctx) {
@@ -145,49 +146,49 @@
       };
     });
 
-    circle.on("mouseup", function(e) {
-      ifDrag_c = false;
-    });
+    // circle.on("mouseup", function(e) {
+    //   ifDrag_c = false;
+    // });
 
-    // img
-    let texture = document.createElement("img");
-    texture.src = "./static/img.png";
-    texture.onload = function() {
-      let img = app.obj({
-        x: 400,
-        y: 400,
-        r: 100,
-        draw: function(ctx) {
-          ctx.drawImage(texture, -100, -100, 200, 200);
-        }
-      });
+    // // img
+    // let texture = document.createElement("img");
+    // texture.src = "./static/img.png";
+    // texture.onload = function() {
+    //   let img = app.obj({
+    //     x: 400,
+    //     y: 400,
+    //     r: 100,
+    //     draw: function(ctx) {
+    //       ctx.drawImage(texture, -100, -100, 200, 200);
+    //     }
+    //   });
 
-      let ifDrag = false;
-      const p = {
-        x: undefined,
-        y: undefined
-      };
+    //   let ifDrag = false;
+    //   const p = {
+    //     x: undefined,
+    //     y: undefined
+    //   };
 
-      img.on("mousemove", function(e) {
-        if (ifDrag) {
-          this.x += e.x - p.x;
-          this.y += e.y - p.y;
+    //   img.on("mousemove", function(e) {
+    //     if (ifDrag) {
+    //       this.x += e.x - p.x;
+    //       this.y += e.y - p.y;
 
-          p.x = e.x;
-          p.y = e.y;
-        }
-      });
+    //       p.x = e.x;
+    //       p.y = e.y;
+    //     }
+    //   });
 
-      img.on("mousedown", function(e) {
-        ifDrag = true;
-        p.x = e.x;
-        p.y = e.y;
-      });
+    //   img.on("mousedown", function(e) {
+    //     ifDrag = true;
+    //     p.x = e.x;
+    //     p.y = e.y;
+    //   });
 
-      img.on("mouseup", function(e) {
-        ifDrag = false;
-      });
-    };
+    //   img.on("mouseup", function(e) {
+    //     ifDrag = false;
+    //   });
+    // };
 
     app.run();
   </script>
